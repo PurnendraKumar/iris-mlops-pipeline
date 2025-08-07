@@ -9,10 +9,10 @@ pip install -r requirements.txt
 
 # 3. Generate data and train models
 python src/data_preprocessing.py
-python src/model_training.py
+python src/model_training.py or python -m src.model_training
 
 # 4. Start MLflow UI (in background)
-mlflow ui &
+mlflow ui
 
 # 5. Run API locally
 uvicorn src.api:app --reload

@@ -1,4 +1,4 @@
-version: '3.8'
+#version: '3.8'
 
 services:
   iris-api:
@@ -18,7 +18,7 @@ services:
       start_period: 40s
 
   mlflow:
-    image: python:3.9-slim
+    image: python:3.11-slim
     ports:
       - "5000:5000"
     volumes:
