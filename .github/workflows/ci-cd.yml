@@ -110,4 +110,8 @@ jobs:
     - name: Run health check
       run: |
         sleep 30  # Wait for deployment
+<<<<<<< HEAD
         curl -f http://localhost:8000/health || exit 1
+=======
+        curl -f http://localhost:8000/health || exit 1
+>>>>>>> c4c7b07edf0756025ea01027d1955f743f81bd4d
