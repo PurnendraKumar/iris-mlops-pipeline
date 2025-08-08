@@ -7,7 +7,8 @@ import mlflow.sklearn
 from sklearn.linear_model import LogisticRegression
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.svm import SVC
-from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
+from sklearn.metrics import accuracy_score, precision_score
+from sklearn.metrics import recall_score, f1_score
 
 from src.data_preprocessing import load_data, preprocess_data
 
@@ -91,7 +92,8 @@ class ModelTrainer:
             with open("models/scaler.pkl", "wb") as f:
                 pickle.dump(self.scaler, f)
 
-            logger.info(f"Best model ({self.best_model_name}) saved with accuracy: {self.best_score:.4f}")
+            logger.info(
+                f"Best model ({self.best_model_name}) saved with accuracy: {self.best_score:.4f}")
 
 
 def main():

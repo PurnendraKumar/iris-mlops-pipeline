@@ -16,7 +16,8 @@ def load_data():
     iris = load_iris()
     df = pd.DataFrame(iris.data, columns=iris.feature_names)
     df['target'] = iris.target
-    df['target_names'] = df['target'].map({0: 'setosa', 1: 'versicolor', 2: 'virginica'})
+    df['target_names'] = df['target'].map(
+        {0: 'setosa', 1: 'versicolor', 2: 'virginica'})
     return df
 
 
@@ -39,7 +40,9 @@ def preprocess_data(df, test_size=0.2, random_state=42):
     X_test_scaled = scaler.transform(X_test)
 
     logger.info(
-        f"Data preprocessing completed. Train shape: {X_train_scaled.shape}, Test shape: {X_test_scaled.shape}"
+        "Data preprocessing completed. "
+        f"Train shape: {X_train_scaled.shape}, "
+        f"Test shape: {X_test_scaled.shape}"
     )
 
     return X_train_scaled, X_test_scaled, y_train, y_test, scaler

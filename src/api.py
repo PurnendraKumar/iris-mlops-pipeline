@@ -37,6 +37,8 @@ except Exception as e:
     logger.error(f"Failed to load model or scaler: {e}")
 
 # Initialize SQLite for prediction logging
+
+
 def init_db():
     with sqlite3.connect('logs/predictions.db') as conn:
         cursor = conn.cursor()
@@ -52,14 +54,18 @@ def init_db():
         ''')
         conn.commit()
 
+
 init_db()
 
 # Request and response models
+
+
 class IrisFeatures(BaseModel):
     sepal_length: float
     sepal_width: float
     petal_length: float
     petal_width: float
+
 
 class PredictionResponse(BaseModel):
     prediction: int
@@ -67,15 +73,19 @@ class PredictionResponse(BaseModel):
     confidence: float
     timestamp: str
 
+
 @app.get("/")
 async def root():
     return {"message": "Welcome to the Iris Classification API"}
 
+
 @app.get("/health")
 async def health_check():
     if model is None or scaler is None:
-        raise HTTPException(status_code=503, detail="Model or scaler not loaded")
+        raise HTTPException(
+            status_code=503, detail="Model or scaler not loaded")
     return {"status": "healthy", "model_loaded": True}
+
 
 @app.post("/predict", response_model=PredictionResponse)
 async def predict(features: IrisFeatures):
@@ -125,21 +135,24 @@ async def predict(features: IrisFeatures):
         logger.error(f"Prediction error: {e}")
         raise HTTPException(status_code=500, detail="Prediction failed")
 
+
 @app.get("/metrics")
 async def get_metrics():
     """Monitoring metrics endpoint"""
     with sqlite3.connect('logs/predictions.db') as conn:
         cursor = conn.cursor()
         # Get prediction counts by class
-        cursor.execute('SELECT prediction_name, COUNT(*) FROM predictions GROUP BY prediction_name')
+        cursor.execute(
+            'SELECT prediction_name, COUNT(*) FROM predictions GROUP BY prediction_name')
         class_counts = dict(cursor.fetchall())
 
         # Get total predictions
         cursor.execute('SELECT COUNT(*) FROM predictions')
         total_predictions = cursor.fetchone()[0]
 
-         # Get recent predictions
-        cursor.execute('SELECT * FROM predictions ORDER BY timestamp DESC LIMIT 10')
+        # Get recent predictions
+        cursor.execute(
+            'SELECT * FROM predictions ORDER BY timestamp DESC LIMIT 10')
         recent = cursor.fetchall()
 
     return {
@@ -149,15 +162,12 @@ async def get_metrics():
         "model_status": "loaded" if model else "not_loaded"
     }
 
+
 @app.get("/predictions/history")
 async def get_prediction_history(limit: int = 100):
     with sqlite3.connect('logs/predictions.db') as conn:
         cursor = conn.cursor()
-        cursor.execute('''
-            SELECT * FROM predictions 
-            ORDER BY timestamp DESC 
-            LIMIT ?
-        ''', (limit,))
+        cursor.execute('''SELECT * FROM predictions ORDER BY timestamp DESC LIMIT ?''', (limit,))
         rows = cursor.fetchall()
 
     return {

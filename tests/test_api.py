@@ -5,17 +5,20 @@ import json
 
 client = TestClient(app)
 
+
 def test_root_endpoint():
     """Test root endpoint"""
     response = client.get("/")
     assert response.status_code == 200
     assert "message" in response.json()
 
+
 def test_health_endpoint():
     """Test health endpoint"""
     response = client.get("/health")
     # Might be 503 if model not loaded in test environment
     assert response.status_code in [200, 503]
+
 
 def test_predict_endpoint():
     """Test prediction endpoint"""
@@ -25,7 +28,7 @@ def test_predict_endpoint():
         "petal_length": 1.4,
         "petal_width": 0.2
     }
-    
+
     response = client.post("/predict", json=test_data)
     # Might fail if model not loaded in test environment
     if response.status_code == 200:
@@ -34,6 +37,7 @@ def test_predict_endpoint():
         assert "prediction_name" in data
         assert "confidence" in data
         assert "timestamp" in data
+
 
 def test_metrics_endpoint():
     """Test metrics endpoint"""
