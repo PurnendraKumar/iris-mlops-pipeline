@@ -174,6 +174,7 @@ async def get_prediction_history(limit: int = 100):
         ]
     }
 
+
 # Only runs when executed with `python api.py`, not `uvicorn`
 if __name__ == "__main__":
     import uvicorn
