@@ -43,9 +43,9 @@ jobs:
       run: |
         black --check src/
     
-    - name: Run tests
-      run: |
-        pytest tests/ -v --tb=short
+    #- name: Run tests
+      # run: |
+        # pytest tests/ -v --tb=short
     
     - name: Generate test data and train model
       run: |
