@@ -53,7 +53,7 @@ jobs:
         python src/model_training.py
     
     - name: Upload artifacts
-      uses: actions/upload-artifact@v4S
+      uses: actions/upload-artifact@v4
       with:
         name: models
         path: models/
