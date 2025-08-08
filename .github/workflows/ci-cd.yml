@@ -3,6 +3,7 @@ name: Build Iris Mlops Pipeline Docker Image
 on:
   push:
     branches: [ main]
+  workflow_dispatch:
 #   pull_request:
 #     branches: [ main ]
 
