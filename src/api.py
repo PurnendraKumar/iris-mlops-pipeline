@@ -36,13 +36,13 @@ try:
 except Exception as e:
     logger.error(f"Failed to load model or scaler: {e}")
 
+
 # Initialize SQLite for prediction logging
-
-
 def init_db():
     with sqlite3.connect('logs/predictions.db') as conn:
         cursor = conn.cursor()
-        cursor.execute('''
+        cursor.execute(
+            '''
             CREATE TABLE IF NOT EXISTS predictions (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 timestamp TEXT,
@@ -51,15 +51,15 @@ def init_db():
                 prediction_name TEXT,
                 confidence REAL
             )
-        ''')
+            '''
+        )
         conn.commit()
 
 
 init_db()
 
+
 # Request and response models
-
-
 class IrisFeatures(BaseModel):
     sepal_length: float
     sepal_width: float
@@ -82,8 +82,7 @@ async def root():
 @app.get("/health")
 async def health_check():
     if model is None or scaler is None:
-        raise HTTPException(
-            status_code=503, detail="Model or scaler not loaded")
+        raise HTTPException(status_code=503, detail="Model or scaler not loaded")
     return {"status": "healthy", "model_loaded": True}
 
 
@@ -93,8 +92,14 @@ async def predict(features: IrisFeatures):
         raise HTTPException(status_code=503, detail="Model not loaded")
 
     try:
-        input_array = np.array([[features.sepal_length, features.sepal_width,
-                                 features.petal_length, features.petal_width]])
+        input_array = np.array(
+            [[
+                features.sepal_length,
+                features.sepal_width,
+                features.petal_length,
+                features.petal_width
+            ]]
+        )
         scaled_input = scaler.transform(input_array)
 
         prediction = model.predict(scaled_input)[0]
@@ -118,10 +123,21 @@ async def predict(features: IrisFeatures):
         # Store to SQLite
         with sqlite3.connect('logs/predictions.db') as conn:
             cursor = conn.cursor()
-            cursor.execute('''
-                INSERT INTO predictions (timestamp, input_data, prediction, prediction_name, confidence)
-                VALUES (?, ?, ?, ?, ?)
-            ''', (timestamp, json.dumps(features.dict()), prediction, prediction_name, confidence))
+            cursor.execute(
+                '''
+                INSERT INTO predictions (
+                    timestamp, input_data, prediction,
+                    prediction_name, confidence
+                ) VALUES (?, ?, ?, ?, ?)
+                ''',
+                (
+                    timestamp,
+                    json.dumps(features.dict()),
+                    prediction,
+                    prediction_name,
+                    confidence
+                )
+            )
             conn.commit()
 
         return PredictionResponse(
@@ -141,9 +157,11 @@ async def get_metrics():
     """Monitoring metrics endpoint"""
     with sqlite3.connect('logs/predictions.db') as conn:
         cursor = conn.cursor()
+
         # Get prediction counts by class
         cursor.execute(
-            'SELECT prediction_name, COUNT(*) FROM predictions GROUP BY prediction_name')
+            'SELECT prediction_name, COUNT(*) FROM predictions GROUP BY prediction_name'
+        )
         class_counts = dict(cursor.fetchall())
 
         # Get total predictions
@@ -152,7 +170,8 @@ async def get_metrics():
 
         # Get recent predictions
         cursor.execute(
-            'SELECT * FROM predictions ORDER BY timestamp DESC LIMIT 10')
+            'SELECT * FROM predictions ORDER BY timestamp DESC LIMIT 10'
+        )
         recent = cursor.fetchall()
 
     return {
@@ -167,7 +186,14 @@ async def get_metrics():
 async def get_prediction_history(limit: int = 100):
     with sqlite3.connect('logs/predictions.db') as conn:
         cursor = conn.cursor()
-        cursor.execute('''SELECT * FROM predictions ORDER BY timestamp DESC LIMIT ?''', (limit,))
+        cursor.execute(
+            '''
+            SELECT * FROM predictions
+            ORDER BY timestamp DESC
+            LIMIT ?
+            ''',
+            (limit,)
+        )
         rows = cursor.fetchall()
 
     return {
