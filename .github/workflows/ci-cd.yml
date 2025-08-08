@@ -42,7 +42,7 @@ jobs:
     - name: Generate test data and train model
       run: |
         python src/data_preprocessing.py
-        python src/model_training.py
+        python -m src.model_training        
     
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
