@@ -23,7 +23,7 @@ COPY models/ ./models/
 
 # Ensure logs directory exists and copy any default log configs
 RUN mkdir -p logs
-COPY logs/ ./logs/
+#COPY logs/ ./logs/
 
 # Expose application port
 EXPOSE 8000
