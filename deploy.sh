@@ -12,13 +12,13 @@ case $ENVIRONMENT in
     echo "Deploying locally with Docker..."
     
     # Stop existing containers
-    docker-compose down || true
+    docker compose down || true
     
     # Pull latest image
     docker pull $DOCKER_IMAGE || echo "Using local image"
     
     # Start services
-    docker-compose up -d
+    docker compose up -d
     
     # Wait for health check
     echo "Waiting for service to be healthy..."
