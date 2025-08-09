@@ -18,7 +18,8 @@ case $ENVIRONMENT in
     docker pull $DOCKER_IMAGE || echo "Using local image"
     
     # Start services
-    docker-compose up -d
+    #docker-compose up -d
+    docker compose ...
     
     # Wait for health check
     echo "Waiting for service to be healthy..."
