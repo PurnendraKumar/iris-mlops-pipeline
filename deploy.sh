@@ -37,7 +37,7 @@ case $ENVIRONMENT in
     #    echo "Deploying to production..."
     # Add production deployment logic
     # This could include AWS ECS, Kubernetes, etc.
-    ;;
+    # ;;
     
   *)
     echo "Unknown environment: $ENVIRONMENT"
