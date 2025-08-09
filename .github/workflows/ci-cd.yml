@@ -87,9 +87,9 @@ jobs:
         cache-to: type=gha,mode=max
 
   deploy:
-  needs: build-and-push
-  runs-on: ubuntu-latest
-  if: github.ref == 'refs/heads/main'
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
   
   steps:
     - uses: actions/checkout@v3
