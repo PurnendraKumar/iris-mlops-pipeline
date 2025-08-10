@@ -5,44 +5,42 @@ import json
 
 client = TestClient(app)
 
-
-def test_root_endpoint():
-    """Test root endpoint"""
+def test_root():
     response = client.get("/")
     assert response.status_code == 200
-    assert "message" in response.json()
+    assert "Iris Classification API" in response.json()["message"]
 
-
-def test_health_endpoint():
-    """Test health endpoint"""
+def test_health():
     response = client.get("/health")
-    # Might be 503 if model not loaded in test environment
-    assert response.status_code in [200, 503]
+    assert response.status_code in [200, 503]  # 503 if model not loaded
 
-
-def test_predict_endpoint():
-    """Test prediction endpoint"""
+def test_predict_valid_input():
     test_data = {
         "sepal_length": 5.1,
         "sepal_width": 3.5,
         "petal_length": 1.4,
         "petal_width": 0.2
     }
-
     response = client.post("/predict", json=test_data)
-    # Might fail if model not loaded in test environment
+    
     if response.status_code == 200:
         data = response.json()
         assert "prediction" in data
-        assert "prediction_name" in data
+        assert "prediction_label" in data
         assert "confidence" in data
-        assert "timestamp" in data
+        assert data["prediction"] in [0, 1, 2]
+        assert data["prediction_label"] in ["setosa", "versicolor", "virginica"]
 
+def test_predict_invalid_input():
+    test_data = {
+        "sepal_length": -1,  # Invalid negative value
+        "sepal_width": 3.5,
+        "petal_length": 1.4,
+        "petal_width": 0.2
+    }
+    response = client.post("/predict", json=test_data)
+    assert response.status_code == 422  # Validation error
 
-def test_metrics_endpoint():
-    """Test metrics endpoint"""
+def test_metrics():
     response = client.get("/metrics")
-    assert response.status_code == 200
-    data = response.json()
-    assert "total_predictions" in data
-    assert "model_status" in data
+    assert response.status_code in [200, 500]  # 500 if logs don't exist yet

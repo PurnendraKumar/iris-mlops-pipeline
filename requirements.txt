@@ -7,8 +7,17 @@ mlflow==2.7.1
 pydantic==2.5.3
 python-multipart==0.0.6
 dvc[azure]==3.27.0
+dvc==3.27.0
 pytest==7.4.2
 flake8==6.1.0
 black==23.9.1
 azure-storage-blob==12.19.0
 azure-identity==1.15.0
+
+# For Prometheus integration
+prometheus-fastapi-instrumentator==6.1.0
+prometheus_client
+
+# For retraining triggers
+watchdog==3.0.0
+schedule==1.2.1
