@@ -1,0 +1,4 @@
+[core]
+    remote = localstore
+['remote "localstore"']
+    url = C:\Practice_CodeBase\iris-mlops-pipeline\dvc_storage
